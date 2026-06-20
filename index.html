@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Telegram Mini App</title>
+  <title>PUBG Mobile Mini App</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -15,31 +15,30 @@
 
     :root {
       --bg: #060913;
-      --panel: rgba(16, 22, 38, 0.88);
-      --panel2: rgba(21, 28, 48, 0.92);
-      --panel3: rgba(28, 37, 61, 0.95);
-      --border: rgba(255, 255, 255, 0.08);
+      --card: rgba(18, 24, 40, 0.92);
+      --card2: rgba(23, 31, 52, 0.96);
+      --soft: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.09);
       --text: #f7f9ff;
       --muted: #aeb8cf;
-      --muted2: #737f99;
-      --blue: #2f8cff;
-      --cyan: #20d4ff;
-      --green: #35d079;
-      --orange: #ffb341;
+      --muted2: #748098;
+      --blue: #3a8dff;
+      --cyan: #22d3ee;
+      --green: #30d876;
+      --orange: #ffb23f;
       --red: #ff4d6d;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
     }
 
     html, body {
       margin: 0;
-      padding: 0;
       min-height: 100%;
-      font-family: Inter, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       background:
-        radial-gradient(circle at 10% 0%, rgba(47, 140, 255, 0.22), transparent 30%),
-        radial-gradient(circle at 90% 10%, rgba(32, 212, 255, 0.12), transparent 25%),
-        radial-gradient(circle at 50% 100%, rgba(255, 77, 109, 0.10), transparent 35%),
-        linear-gradient(180deg, #080c18 0%, #050813 100%);
+        radial-gradient(circle at 12% 0%, rgba(58, 141, 255, 0.23), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(34, 211, 238, 0.14), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(255, 77, 109, 0.10), transparent 36%),
+        linear-gradient(180deg, #080c18 0%, #050812 100%);
       color: var(--text);
       overflow-x: hidden;
     }
@@ -49,12 +48,12 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.10;
+      opacity: 0.09;
       background-image:
-        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-      background-size: 36px 36px;
-      mask-image: linear-gradient(to bottom, black, transparent 80%);
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
     }
 
     .app {
@@ -63,7 +62,27 @@
       margin: 0 auto;
       padding: 16px 14px 28px;
       position: relative;
-      z-index: 1;
+      z-index: 2;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.18s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .topbar {
@@ -76,83 +95,99 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
     }
 
     .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      box-shadow: 0 10px 30px rgba(47, 140, 255, 0.35);
-      font-size: 21px;
+      font-size: 22px;
+      box-shadow: 0 12px 30px rgba(58, 141, 255, 0.34);
     }
 
     .brand-title {
       font-size: 17px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
     }
 
     .brand-sub {
-      font-size: 12px;
       color: var(--muted2);
+      font-size: 12px;
+      font-weight: 700;
       margin-top: 2px;
     }
 
     .lang-pill {
       padding: 9px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.06);
+      background: var(--soft);
       border: 1px solid var(--border);
       color: var(--muted);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .hero {
+    .back-mini {
+      border: none;
+      background: rgba(255,255,255,0.07);
+      color: white;
+      border-radius: 17px;
+      padding: 12px 15px;
+      font-size: 14px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .hero,
+    .package-card,
+    .generic-card {
       position: relative;
       overflow: hidden;
-      border-radius: 28px;
+      border-radius: 30px;
       padding: 22px;
       background:
-        linear-gradient(135deg, rgba(47, 140, 255, 0.20), rgba(32, 212, 255, 0.06)),
-        var(--panel);
+        linear-gradient(135deg, rgba(58, 141, 255, 0.17), rgba(34, 211, 238, 0.05)),
+        var(--card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
       margin-bottom: 14px;
     }
 
-    .hero::after {
+    .hero::after,
+    .package-card::after,
+    .generic-card::after {
       content: "";
       position: absolute;
-      right: -45px;
-      top: -45px;
-      width: 150px;
-      height: 150px;
+      right: -65px;
+      top: -65px;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
-      background: rgba(47, 140, 255, 0.22);
-      filter: blur(2px);
+      background: rgba(58, 141, 255, 0.20);
+      filter: blur(3px);
     }
 
     .badge {
+      position: relative;
+      z-index: 2;
       display: inline-flex;
       align-items: center;
       gap: 7px;
       padding: 8px 11px;
       border-radius: 999px;
-      background: rgba(53, 208, 121, 0.12);
-      border: 1px solid rgba(53, 208, 121, 0.22);
-      color: #baf8d1;
+      background: rgba(48, 216, 118, 0.12);
+      border: 1px solid rgba(48, 216, 118, 0.23);
+      color: #bff8d5;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 14px;
-      position: relative;
-      z-index: 2;
     }
 
     .pulse {
@@ -160,10 +195,10 @@
       height: 8px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 0 6px rgba(53, 208, 121, 0.12);
+      box-shadow: 0 0 0 6px rgba(48, 216, 118, 0.12);
     }
 
-    .hero-title {
+    .title {
       position: relative;
       z-index: 2;
       font-size: 27px;
@@ -171,47 +206,46 @@
       line-height: 1.15;
       letter-spacing: -0.5px;
       margin-bottom: 12px;
+      white-space: pre-line;
     }
 
-    .hero-text {
+    .text {
       position: relative;
       z-index: 2;
+      color: #dbe4f6;
       font-size: 15px;
       line-height: 1.65;
-      color: #dce4f6;
       white-space: pre-line;
     }
 
     .user-card {
+      position: relative;
+      z-index: 2;
+      margin-top: 18px;
+      padding: 13px;
+      border-radius: 21px;
+      background: rgba(5, 8, 19, 0.40);
+      border: 1px solid rgba(255,255,255,0.07);
       display: flex;
       align-items: center;
       gap: 13px;
-      margin-top: 18px;
-      padding: 13px;
-      border-radius: 20px;
-      background: rgba(5, 8, 19, 0.38);
-      border: 1px solid rgba(255,255,255,0.07);
-      position: relative;
-      z-index: 2;
     }
 
     .avatar {
       width: 46px;
       height: 46px;
       border-radius: 16px;
+      background: linear-gradient(135deg, #6b7cff, #22d3ee);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #6b7cff, #22d3ee);
       font-size: 20px;
-      font-weight: 900;
-      color: white;
-      flex-shrink: 0;
+      font-weight: 950;
     }
 
     .user-name {
       font-size: 15px;
-      font-weight: 900;
+      font-weight: 950;
     }
 
     .user-id {
@@ -225,48 +259,46 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 15px;
     }
 
     .stat {
-      padding: 13px 10px;
-      border-radius: 20px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
       text-align: center;
-      backdrop-filter: blur(14px);
+      padding: 13px 9px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
     }
 
     .stat-value {
       font-size: 18px;
       font-weight: 950;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
     .stat-label {
-      font-size: 11px;
       color: var(--muted2);
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 900;
     }
 
     .section-title {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 16px 2px 10px;
+      margin: 17px 2px 10px;
     }
 
     .section-title h3 {
       margin: 0;
       font-size: 15px;
       font-weight: 950;
-      color: #eef3ff;
     }
 
     .section-title span {
-      font-size: 12px;
       color: var(--muted2);
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -278,34 +310,35 @@
 
     .menu-card {
       border: 1px solid var(--border);
-      border-radius: 23px;
+      border-radius: 24px;
       padding: 16px;
       background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025));
-      box-shadow: 0 14px 35px rgba(0,0,0,0.24);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.25);
       display: flex;
       align-items: center;
       gap: 14px;
       cursor: pointer;
-      transition: 0.16s ease;
       backdrop-filter: blur(15px);
     }
 
-    .menu-card:active {
+    .menu-card:active,
+    .action-btn:active,
+    .back-mini:active {
       transform: scale(0.985);
       opacity: 0.92;
     }
 
     .menu-icon {
-      width: 48px;
-      height: 48px;
+      width: 49px;
+      height: 49px;
       border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 23px;
       flex-shrink: 0;
-      background: rgba(47, 140, 255, 0.14);
-      border: 1px solid rgba(47, 140, 255, 0.20);
+      background: rgba(58, 141, 255, 0.14);
+      border: 1px solid rgba(58, 141, 255, 0.20);
     }
 
     .menu-content {
@@ -320,87 +353,125 @@
     }
 
     .menu-desc {
-      font-size: 12px;
-      line-height: 1.35;
       color: var(--muted2);
+      font-size: 12px;
       font-weight: 700;
+      line-height: 1.35;
     }
 
     .arrow {
       color: var(--muted2);
-      font-size: 20px;
-      font-weight: 900;
+      font-size: 24px;
+      font-weight: 950;
     }
 
-    .footer {
-      margin-top: 15px;
-      color: var(--muted2);
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.5;
-      font-weight: 700;
+    .divider {
+      position: relative;
+      z-index: 2;
+      width: 78%;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ffffff, rgba(255,255,255,0.10));
+      margin-bottom: 22px;
+      opacity: 0.85;
     }
 
-    .page {
-      display: none;
+    .info-block {
+      position: relative;
+      z-index: 2;
+      padding: 16px;
+      border-radius: 23px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 13px;
     }
 
-    .page.active {
-      display: block;
+    .info-head {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 19px;
+      font-weight: 950;
+      margin-bottom: 8px;
     }
 
-    .detail-card {
-      border-radius: 28px;
-      padding: 20px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .back-btn {
-      border: none;
-      background: rgba(255,255,255,0.07);
-      color: white;
-      border-radius: 16px;
-      padding: 11px 14px;
-      font-size: 14px;
-      font-weight: 900;
-      margin-bottom: 14px;
-      cursor: pointer;
-    }
-
-    .detail-icon {
-      width: 62px;
-      height: 62px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
+    .info-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      box-shadow: 0 12px 30px rgba(47,140,255,0.28);
-      margin-bottom: 16px;
+      font-size: 21px;
+      background: rgba(58, 141, 255, 0.16);
+      border: 1px solid rgba(58, 141, 255, 0.22);
+      flex-shrink: 0;
     }
 
-    .detail-title {
-      font-size: 24px;
-      font-weight: 950;
-      margin-bottom: 9px;
-      letter-spacing: -0.3px;
-    }
-
-    .detail-text {
-      color: var(--muted);
+    .info-text {
+      color: #dbe4f6;
       font-size: 14px;
-      line-height: 1.65;
-      margin-bottom: 18px;
+      line-height: 1.55;
+      padding-left: 53px;
+    }
+
+    .choose-text {
+      position: relative;
+      z-index: 2;
+      margin-top: 17px;
+      font-size: 18px;
+      font-weight: 950;
+      line-height: 1.35;
+    }
+
+    .big-actions {
+      display: grid;
+      gap: 11px;
+    }
+
+    .action-btn {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      color: white;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      font-size: 17px;
+      font-weight: 950;
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, rgba(58,141,255,0.35), rgba(34,211,238,0.16));
+      border-color: rgba(58,141,255,0.25);
+    }
+
+    .action-btn.green {
+      background: linear-gradient(135deg, rgba(48,216,118,0.30), rgba(58,141,255,0.10));
+      border-color: rgba(48,216,118,0.22);
+    }
+
+    .action-btn.orange {
+      background: linear-gradient(135deg, rgba(255,178,63,0.26), rgba(58,141,255,0.08));
+      border-color: rgba(255,178,63,0.22);
+    }
+
+    .action-btn.back {
+      background: rgba(255,255,255,0.06);
     }
 
     .list {
+      position: relative;
+      z-index: 2;
       display: grid;
       gap: 10px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .list-item {
@@ -408,27 +479,18 @@
       border-radius: 18px;
       background: rgba(255,255,255,0.045);
       border: 1px solid rgba(255,255,255,0.06);
-      color: #e7edfb;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 850;
+      color: #e7edfb;
     }
 
-    .primary-btn {
-      width: 100%;
-      border: none;
-      border-radius: 19px;
-      padding: 15px;
-      color: white;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      font-size: 15px;
-      font-weight: 950;
-      box-shadow: 0 14px 34px rgba(47,140,255,0.28);
-      cursor: pointer;
-    }
-
-    .primary-btn:active {
-      transform: scale(0.985);
-      opacity: 0.92;
+    .footer {
+      margin-top: 15px;
+      text-align: center;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 700;
     }
 
     @media (min-width: 480px) {
@@ -438,20 +500,20 @@
     }
 
     @media (max-width: 390px) {
-      .hero-title {
-        font-size: 24px;
+      .title {
+        font-size: 23px;
       }
 
-      .stats {
-        gap: 8px;
+      .info-head {
+        font-size: 17px;
       }
 
-      .menu-title {
-        font-size: 15px;
+      .info-text {
+        padding-left: 0;
       }
 
-      .menu-desc {
-        font-size: 11px;
+      .action-btn {
+        font-size: 16px;
       }
     }
   </style>
@@ -460,6 +522,7 @@
 <body>
   <div class="app">
 
+    <!-- ANA MENÜ -->
     <div id="homePage" class="page active">
       <div class="topbar">
         <div class="brand">
@@ -478,13 +541,8 @@
           <span id="badgeText">Aktif Sistem</span>
         </div>
 
-        <div class="hero-title" id="heroTitle">
-          PUBG Mobile Ücretsiz Dosya Merkezi
-        </div>
-
-        <div class="hero-text" id="heroText">
-          Yükleniyor...
-        </div>
+        <div class="title" id="heroTitle">PUBG Mobile Dosya Merkezi</div>
+        <div class="text" id="heroText">Yükleniyor...</div>
 
         <div class="user-card">
           <div class="avatar" id="avatar">U</div>
@@ -505,8 +563,8 @@
           <div class="stat-label" id="statTwo">Dil</div>
         </div>
         <div class="stat">
-          <div class="stat-value">VIP</div>
-          <div class="stat-label" id="statThree">Panel</div>
+          <div class="stat-value">4.4</div>
+          <div class="stat-label" id="statThree">Sürüm</div>
         </div>
       </div>
 
@@ -516,16 +574,16 @@
       </div>
 
       <div class="menu-grid">
-        <div class="menu-card" onclick="openDetail('cheat_menu')">
+        <div class="menu-card" onclick="openPackagePage()">
           <div class="menu-icon">🎮</div>
           <div class="menu-content">
             <div class="menu-title" id="mCheatTitle">Hile Menüsü</div>
-            <div class="menu-desc" id="mCheatDesc">Config ve dosya kategorileri</div>
+            <div class="menu-desc" id="mCheatDesc">PUBG Mobile 4.4 paketleri</div>
           </div>
           <div class="arrow">›</div>
         </div>
 
-        <div class="menu-card" onclick="openDetail('referral_center')">
+        <div class="menu-card" onclick="openGeneric('referral_center')">
           <div class="menu-icon">👥</div>
           <div class="menu-content">
             <div class="menu-title" id="mRefTitle">Referans Merkezi</div>
@@ -534,7 +592,7 @@
           <div class="arrow">›</div>
         </div>
 
-        <div class="menu-card" onclick="openDetail('apk_obb_menu')">
+        <div class="menu-card" onclick="openGeneric('apk_obb_menu')">
           <div class="menu-icon">📦</div>
           <div class="menu-content">
             <div class="menu-title" id="mApkTitle">APK + OBB Menüsü</div>
@@ -543,7 +601,7 @@
           <div class="arrow">›</div>
         </div>
 
-        <div class="menu-card" onclick="openDetail('mini_games')">
+        <div class="menu-card" onclick="openGeneric('mini_games')">
           <div class="menu-icon">🎯</div>
           <div class="menu-content">
             <div class="menu-title" id="mGameTitle">Mini Oyunlar</div>
@@ -552,7 +610,7 @@
           <div class="arrow">›</div>
         </div>
 
-        <div class="menu-card" onclick="openDetail('settings')">
+        <div class="menu-card" onclick="openGeneric('settings')">
           <div class="menu-icon">⚙️</div>
           <div class="menu-content">
             <div class="menu-title" id="mSetTitle">Ayarlar</div>
@@ -561,7 +619,7 @@
           <div class="arrow">›</div>
         </div>
 
-        <div class="menu-card" onclick="openDetail('admin_panel')">
+        <div class="menu-card" onclick="openGeneric('admin_panel')">
           <div class="menu-icon">🛠️</div>
           <div class="menu-content">
             <div class="menu-title" id="mAdminTitle">Admin Paneli</div>
@@ -571,23 +629,141 @@
         </div>
       </div>
 
-      <div class="footer" id="footerText">
-        Menüden seçim yaparak devam edebilirsin.
+      <div class="footer" id="footerText">Menüden seçim yaparak devam edebilirsin.</div>
+    </div>
+
+    <!-- PUBG MOBILE 4.4 PAKETLERİ -->
+    <div id="packagePage" class="page">
+      <button class="back-mini" onclick="goHome()" id="backHomeOne">← Ana Menü</button>
+
+      <div class="package-card">
+        <div class="title" id="packageTitle">📂 PUBG Mobile 4.4 Paketleri</div>
+        <div class="divider"></div>
+
+        <div class="info-block">
+          <div class="info-head">
+            <div class="info-icon">🆓</div>
+            <span id="packFreeTitle">Hile / Config</span>
+          </div>
+          <div class="info-text" id="packFreeDesc">Güncel oyun sürümüne göre eklenen dosyalar.</div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-head">
+            <div class="info-icon">🛡️</div>
+            <span id="packVpnTitle">VPN Config</span>
+          </div>
+          <div class="info-text" id="packVpnDesc">Config dosyaları ve önerilen VPN uygulamaları.</div>
+        </div>
+
+        <div class="choose-text" id="packageChoose">👇 Kullanmak istediğin bölümü seç:</div>
+      </div>
+
+      <div class="big-actions">
+        <button class="action-btn primary" onclick="openFreePage()">
+          <span>🆓</span>
+          <span id="btnOpenFree">Ücretsiz Hile / Config</span>
+        </button>
+
+        <button class="action-btn" onclick="openVpnPage()">
+          <span>🛡️</span>
+          <span id="btnOpenVpn">VPN Config Menüsü</span>
+        </button>
+
+        <button class="action-btn back" onclick="goHome()">
+          <span>⬅️</span>
+          <span id="btnBackMainOne">Ana Menüye Dön</span>
+        </button>
       </div>
     </div>
 
-    <div id="detailPage" class="page">
-      <button class="back-btn" onclick="goHome()" id="backBtn">← Geri</button>
+    <!-- ÜCRETSİZ HİLE PAKETLERİ -->
+    <div id="freePage" class="page">
+      <button class="back-mini" onclick="openPackagePage()" id="backPackageOne">← Geri</button>
 
-      <div class="detail-card">
-        <div class="detail-icon" id="detailIcon">🎮</div>
-        <div class="detail-title" id="detailTitle">Başlık</div>
-        <div class="detail-text" id="detailText">Açıklama</div>
+      <div class="package-card">
+        <div class="title" id="freePageTitle">🆓 Ücretsiz Hile Paketleri • 4.4</div>
+        <div class="divider"></div>
 
-        <div class="list" id="detailList"></div>
+        <div class="info-block">
+          <div class="info-head">
+            <div class="info-icon">📂</div>
+            <span id="freeFolderTitle">Eklenen Hile / Config dosyaları.</span>
+          </div>
+          <div class="info-text" id="freeFolderDesc">Güncel sürüme uygun kategori dosyaları listelenir.</div>
+        </div>
 
-        <button class="primary-btn" onclick="sendSelectedAction()" id="sendBtn">
-          Bot’a Gönder
+        <div class="choose-text" id="freeChoose">🔽 Bir kategori seç:</div>
+      </div>
+
+      <div class="big-actions">
+        <button class="action-btn primary" onclick="sendAction('cheat_menu')">
+          <span>🎮</span>
+          <span id="btnCheatSub">Hile Menüsü</span>
+        </button>
+
+        <button class="action-btn orange" onclick="sendAction('config_menu')">
+          <span>🗂️</span>
+          <span id="btnConfigSub">Config Menüsü</span>
+        </button>
+
+        <button class="action-btn back" onclick="openPackagePage()">
+          <span>⬅️</span>
+          <span id="btnFreeBack">Geri</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ÜCRETSİZ VPN CONFIG -->
+    <div id="vpnPage" class="page">
+      <button class="back-mini" onclick="openPackagePage()" id="backPackageTwo">← Geri</button>
+
+      <div class="package-card">
+        <div class="title" id="vpnPageTitle">🛡️ Ücretsiz VPN Config • 4.4</div>
+        <div class="divider"></div>
+
+        <div class="info-block">
+          <div class="info-head">
+            <div class="info-icon">📂</div>
+            <span id="vpnFolderTitle">VPN / Config dosyaları.</span>
+          </div>
+          <div class="info-text" id="vpnFolderDesc">VPN config dosyaları ve önerilen VPN uygulamaları listelenir.</div>
+        </div>
+
+        <div class="choose-text" id="vpnChoose">🔽 Bir kategori seç:</div>
+      </div>
+
+      <div class="big-actions">
+        <button class="action-btn primary" onclick="sendAction('vpn_config_files')">
+          <span>🛡️</span>
+          <span id="btnVpnSub">VPN Config Menüsü</span>
+        </button>
+
+        <button class="action-btn green" onclick="sendAction('vpn_apps')">
+          <span>📱</span>
+          <span id="btnVpnApps">VPN Uygulaması</span>
+        </button>
+
+        <button class="action-btn back" onclick="openPackagePage()">
+          <span>⬅️</span>
+          <span id="btnVpnBack">Geri</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DİĞER SAYFALAR -->
+    <div id="genericPage" class="page">
+      <button class="back-mini" onclick="goHome()" id="backHomeTwo">← Ana Menü</button>
+
+      <div class="generic-card">
+        <div class="title" id="genericTitle">Başlık</div>
+        <div class="text" id="genericText">Açıklama</div>
+
+        <div class="list" id="genericList"></div>
+
+        <button class="action-btn primary" onclick="sendGenericAction()">
+          <span>🚀</span>
+          <span id="genericSendBtn">Bot’a Gönder</span>
         </button>
       </div>
     </div>
@@ -595,7 +771,15 @@
   </div>
 
   <script>
-    const tg = window.Telegram.WebApp;
+    const tg = window.Telegram && window.Telegram.WebApp
+      ? window.Telegram.WebApp
+      : {
+          ready(){},
+          expand(){},
+          sendData(data){ alert(data); },
+          initDataUnsafe: {}
+        };
+
     tg.ready();
     tg.expand();
 
@@ -604,70 +788,86 @@
     const urlUserId = params.get("user_id") || "-";
     const tgUser = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
 
-    let selectedAction = "";
+    let currentGenericAction = "";
 
     const TEXTS = {
       tr: {
         code: "TR",
         brandSub: "Mini App Panel",
         badge: "Aktif Sistem",
-        heroTitle: "PUBG Mobile Ücretsiz Dosya Merkezi",
-        heroText: "Gelişmiş Mini App paneline hoş geldin.\nConfig, VPN, APK + OBB, referans ve oyun menülerine buradan erişebilirsin.",
+        heroTitle: "PUBG Mobile\nDosya Merkezi",
+        heroText: "Config, VPN, APK + OBB, referans ve oyun menülerine buradan erişebilirsin.",
         statOne: "Aktif",
         statTwo: "Dil",
-        statThree: "Panel",
+        statThree: "Sürüm",
         menuTitle: "Ana Menü",
         menuSub: "Seçim yap",
         footer: "Menüden seçim yaparak devam edebilirsin.",
+        backHome: "← Ana Menü",
         back: "← Geri",
         send: "Bot’a Gönder",
 
-        menus: {
-          cheat_menu: {
-            icon: "🎮",
-            title: "Hile Menüsü",
-            desc: "Config, VPN ve özel dosya kategorilerine buradan ulaşabilirsin.",
-            items: ["Global Config", "Kore Config", "VPN Dosyaları", "Güncel Paketler"]
-          },
-          referral_center: {
-            icon: "👥",
-            title: "Referans Merkezi",
-            desc: "Arkadaşlarını davet ederek bonus ve özel erişim kazan.",
-            items: ["Referans Linki", "Davet Sayısı", "Ödül Durumu", "Bonus Görevleri"]
-          },
-          apk_obb_menu: {
-            icon: "📦",
-            title: "APK + OBB Menüsü",
-            desc: "Kurulum için gereken APK ve OBB paketleri burada listelenir.",
-            items: ["APK Dosyaları", "OBB Paketleri", "Kurulum Rehberi", "Sürüm Notları"]
-          },
-          mini_games: {
-            icon: "🎯",
-            title: "Mini Oyunlar",
-            desc: "Bonus kazanabileceğin eğlenceli mini oyun bölümü.",
-            items: ["Şans Kutusu", "Günlük Spin", "Puan Topla", "Liderlik Tablosu"]
-          },
-          settings: {
-            icon: "⚙️",
-            title: "Ayarlar",
-            desc: "Dil, profil ve uygulama tercihlerini yönet.",
-            items: ["Dil Ayarı", "Profil Bilgileri", "Bildirimler", "Tema Ayarları"]
-          },
-          admin_panel: {
-            icon: "🛠️",
-            title: "Admin Paneli",
-            desc: "Yalnızca yetkili kullanıcılar için yönetim alanı.",
-            items: ["Duyuru Yönetimi", "Kullanıcı Kontrolü", "Dosya Yönetimi", "İstatistikler"]
-          }
-        },
+        packageTitle: "📂 PUBG Mobile 4.4 Paketleri",
+        packFreeTitle: "Hile / Config",
+        packFreeDesc: "Güncel oyun sürümüne göre eklenen dosyalar.",
+        packVpnTitle: "VPN Config",
+        packVpnDesc: "Config dosyaları ve önerilen VPN uygulamaları.",
+        packageChoose: "👇 Kullanmak istediğin bölümü seç:",
+        btnOpenFree: "Ücretsiz Hile / Config",
+        btnOpenVpn: "VPN Config Menüsü",
+        btnBackMain: "Ana Menüye Dön",
+
+        freePageTitle: "🆓 Ücretsiz Hile Paketleri • 4.4",
+        freeFolderTitle: "Eklenen Hile / Config dosyaları.",
+        freeFolderDesc: "Güncel sürüme uygun kategori dosyaları listelenir.",
+        freeChoose: "🔽 Bir kategori seç:",
+        btnCheatSub: "Hile Menüsü",
+        btnConfigSub: "Config Menüsü",
+        btnFreeBack: "Geri",
+
+        vpnPageTitle: "🛡️ Ücretsiz VPN Config • 4.4",
+        vpnFolderTitle: "VPN / Config dosyaları.",
+        vpnFolderDesc: "VPN config dosyaları ve önerilen VPN uygulamaları listelenir.",
+        vpnChoose: "🔽 Bir kategori seç:",
+        btnVpnSub: "VPN Config Menüsü",
+        btnVpnApps: "VPN Uygulaması",
+        btnVpnBack: "Geri",
 
         cards: {
-          cheat: ["Hile Menüsü", "Config ve dosya kategorileri"],
+          cheat: ["Hile Menüsü", "PUBG Mobile 4.4 paketleri"],
           ref: ["Referans Merkezi", "Davet sistemi ve ödüller"],
           apk: ["APK + OBB Menüsü", "Kurulum dosyaları ve paketler"],
           game: ["Mini Oyunlar", "Bonus ve eğlence bölümü"],
           set: ["Ayarlar", "Dil, profil ve tercih ayarları"],
           admin: ["Admin Paneli", "Yetkili kullanıcı alanı"]
+        },
+
+        generic: {
+          referral_center: {
+            title: "👥 Referans Merkezi",
+            text: "Arkadaşlarını davet ederek bonus ve özel erişim kazan.",
+            items: ["Referans Linki", "Davet Sayısı", "Ödül Durumu", "Bonus Görevleri"]
+          },
+          apk_obb_menu: {
+            title: "📦 APK + OBB Menüsü",
+            text: "Kurulum için gerekli APK ve OBB paketleri burada listelenir.",
+            items: ["APK Dosyaları", "OBB Paketleri", "Kurulum Rehberi", "Sürüm Notları"]
+          },
+          mini_games: {
+            title: "🎯 Mini Oyunlar",
+            text: "Bonus ve eğlence için mini oyunlar bölümü.",
+            items: ["Şans Kutusu", "Günlük Spin", "Puan Topla", "Liderlik Tablosu"]
+          },
+          settings: {
+            title: "⚙️ Ayarlar",
+            text: "Dil, profil ve uygulama tercihlerini yönet.",
+            items: ["Dil Ayarı", "Profil Bilgileri", "Bildirimler", "Tema Ayarları"]
+          },
+          admin_panel: {
+            title: "🛠️ Admin Paneli",
+            text: "Yalnızca yetkili kullanıcılar için yönetim alanı.",
+            items: ["Duyuru Yönetimi", "Kullanıcı Kontrolü", "Dosya Yönetimi", "İstatistikler"]
+          }
         }
       },
 
@@ -675,63 +875,59 @@
         code: "EN",
         brandSub: "Mini App Panel",
         badge: "Active System",
-        heroTitle: "PUBG Mobile Free File Center",
-        heroText: "Welcome to the advanced Mini App panel.\nAccess Config, VPN, APK + OBB, referral and game menus from here.",
+        heroTitle: "PUBG Mobile\nFile Center",
+        heroText: "Access Config, VPN, APK + OBB, referral and game menus from here.",
         statOne: "Online",
         statTwo: "Lang",
-        statThree: "Panel",
+        statThree: "Version",
         menuTitle: "Main Menu",
         menuSub: "Choose",
         footer: "Select a menu item to continue.",
+        backHome: "← Main Menu",
         back: "← Back",
         send: "Send to Bot",
 
-        menus: {
-          cheat_menu: {
-            icon: "🎮",
-            title: "Cheat Menu",
-            desc: "Access Config, VPN and special file categories from here.",
-            items: ["Global Config", "Korea Config", "VPN Files", "Latest Packages"]
-          },
-          referral_center: {
-            icon: "👥",
-            title: "Referral Center",
-            desc: "Invite friends to earn bonuses and special access.",
-            items: ["Referral Link", "Invite Count", "Reward Status", "Bonus Tasks"]
-          },
-          apk_obb_menu: {
-            icon: "📦",
-            title: "APK + OBB Menu",
-            desc: "APK and OBB packages required for installation are listed here.",
-            items: ["APK Files", "OBB Packages", "Install Guide", "Version Notes"]
-          },
-          mini_games: {
-            icon: "🎯",
-            title: "Mini Games",
-            desc: "A fun mini game section where you can earn bonuses.",
-            items: ["Lucky Box", "Daily Spin", "Collect Points", "Leaderboard"]
-          },
-          settings: {
-            icon: "⚙️",
-            title: "Settings",
-            desc: "Manage language, profile and app preferences.",
-            items: ["Language", "Profile Info", "Notifications", "Theme Settings"]
-          },
-          admin_panel: {
-            icon: "🛠️",
-            title: "Admin Panel",
-            desc: "Management area for authorized users only.",
-            items: ["Announcement Control", "User Control", "File Management", "Statistics"]
-          }
-        },
+        packageTitle: "📂 PUBG Mobile 4.4 Packages",
+        packFreeTitle: "Cheat / Config",
+        packFreeDesc: "Files added according to the latest game version.",
+        packVpnTitle: "VPN Config",
+        packVpnDesc: "Config files and recommended VPN applications.",
+        packageChoose: "👇 Choose the section you want to use:",
+        btnOpenFree: "Free Cheat / Config",
+        btnOpenVpn: "VPN Config Menu",
+        btnBackMain: "Back to Main Menu",
+
+        freePageTitle: "🆓 Free Cheat Packages • 4.4",
+        freeFolderTitle: "Added Cheat / Config files.",
+        freeFolderDesc: "Category files suitable for the current version are listed.",
+        freeChoose: "🔽 Choose a category:",
+        btnCheatSub: "Cheat Menu",
+        btnConfigSub: "Config Menu",
+        btnFreeBack: "Back",
+
+        vpnPageTitle: "🛡️ Free VPN Config • 4.4",
+        vpnFolderTitle: "VPN / Config files.",
+        vpnFolderDesc: "VPN config files and recommended VPN apps are listed.",
+        vpnChoose: "🔽 Choose a category:",
+        btnVpnSub: "VPN Config Menu",
+        btnVpnApps: "VPN Application",
+        btnVpnBack: "Back",
 
         cards: {
-          cheat: ["Cheat Menu", "Config and file categories"],
+          cheat: ["Cheat Menu", "PUBG Mobile 4.4 packages"],
           ref: ["Referral Center", "Invite system and rewards"],
           apk: ["APK + OBB Menu", "Install files and packages"],
           game: ["Mini Games", "Bonus and entertainment"],
           set: ["Settings", "Language, profile and preferences"],
           admin: ["Admin Panel", "Authorized user area"]
+        },
+
+        generic: {
+          referral_center: { title: "👥 Referral Center", text: "Invite friends and earn bonuses.", items: ["Referral Link", "Invite Count", "Reward Status", "Bonus Tasks"] },
+          apk_obb_menu: { title: "📦 APK + OBB Menu", text: "APK and OBB packages required for installation.", items: ["APK Files", "OBB Packages", "Install Guide", "Version Notes"] },
+          mini_games: { title: "🎯 Mini Games", text: "Mini games section for bonuses and fun.", items: ["Lucky Box", "Daily Spin", "Collect Points", "Leaderboard"] },
+          settings: { title: "⚙️ Settings", text: "Manage language, profile and app preferences.", items: ["Language", "Profile Info", "Notifications", "Theme Settings"] },
+          admin_panel: { title: "🛠️ Admin Panel", text: "Management area for authorized users only.", items: ["Announcements", "Users", "Files", "Statistics"] }
         }
       },
 
@@ -739,63 +935,59 @@
         code: "RU",
         brandSub: "Mini App Панель",
         badge: "Система активна",
-        heroTitle: "Бесплатный файловый центр PUBG Mobile",
-        heroText: "Добро пожаловать в расширенную Mini App панель.\nConfig, VPN, APK + OBB, рефералы и игры доступны здесь.",
+        heroTitle: "PUBG Mobile\nФайловый центр",
+        heroText: "Config, VPN, APK + OBB, рефералы и игровые меню доступны здесь.",
         statOne: "Онлайн",
         statTwo: "Язык",
-        statThree: "Панель",
+        statThree: "Версия",
         menuTitle: "Главное меню",
         menuSub: "Выбрать",
         footer: "Выберите пункт меню, чтобы продолжить.",
+        backHome: "← Главное меню",
         back: "← Назад",
         send: "Отправить боту",
 
-        menus: {
-          cheat_menu: {
-            icon: "🎮",
-            title: "Меню читов",
-            desc: "Config, VPN и специальные категории файлов доступны здесь.",
-            items: ["Global Config", "Korea Config", "VPN файлы", "Новые пакеты"]
-          },
-          referral_center: {
-            icon: "👥",
-            title: "Реферальный центр",
-            desc: "Приглашайте друзей и получайте бонусы.",
-            items: ["Реферальная ссылка", "Количество приглашений", "Статус награды", "Бонусные задания"]
-          },
-          apk_obb_menu: {
-            icon: "📦",
-            title: "Меню APK + OBB",
-            desc: "Файлы APK и OBB для установки находятся здесь.",
-            items: ["APK файлы", "OBB пакеты", "Инструкция", "Заметки версии"]
-          },
-          mini_games: {
-            icon: "🎯",
-            title: "Мини-игры",
-            desc: "Раздел мини-игр для бонусов.",
-            items: ["Lucky Box", "Daily Spin", "Собрать очки", "Таблица лидеров"]
-          },
-          settings: {
-            icon: "⚙️",
-            title: "Настройки",
-            desc: "Управление языком, профилем и настройками.",
-            items: ["Язык", "Профиль", "Уведомления", "Тема"]
-          },
-          admin_panel: {
-            icon: "🛠️",
-            title: "Админ-панель",
-            desc: "Раздел управления только для администраторов.",
-            items: ["Объявления", "Пользователи", "Файлы", "Статистика"]
-          }
-        },
+        packageTitle: "📂 PUBG Mobile 4.4 Пакеты",
+        packFreeTitle: "Cheat / Config",
+        packFreeDesc: "Файлы, добавленные под актуальную версию игры.",
+        packVpnTitle: "VPN Config",
+        packVpnDesc: "Config файлы и рекомендуемые VPN приложения.",
+        packageChoose: "👇 Выберите нужный раздел:",
+        btnOpenFree: "Бесплатный Cheat / Config",
+        btnOpenVpn: "VPN Config Меню",
+        btnBackMain: "Вернуться в меню",
+
+        freePageTitle: "🆓 Бесплатные Cheat пакеты • 4.4",
+        freeFolderTitle: "Добавленные Cheat / Config файлы.",
+        freeFolderDesc: "Категории файлов для актуальной версии.",
+        freeChoose: "🔽 Выберите категорию:",
+        btnCheatSub: "Меню читов",
+        btnConfigSub: "Config Меню",
+        btnFreeBack: "Назад",
+
+        vpnPageTitle: "🛡️ Бесплатный VPN Config • 4.4",
+        vpnFolderTitle: "VPN / Config файлы.",
+        vpnFolderDesc: "VPN config файлы и рекомендуемые VPN приложения.",
+        vpnChoose: "🔽 Выберите категорию:",
+        btnVpnSub: "VPN Config Меню",
+        btnVpnApps: "VPN Приложение",
+        btnVpnBack: "Назад",
 
         cards: {
-          cheat: ["Меню читов", "Config и категории файлов"],
+          cheat: ["Меню читов", "Пакеты PUBG Mobile 4.4"],
           ref: ["Реферальный центр", "Приглашения и награды"],
           apk: ["Меню APK + OBB", "Файлы установки"],
           game: ["Мини-игры", "Бонусы и развлечения"],
           set: ["Настройки", "Язык, профиль и параметры"],
           admin: ["Админ-панель", "Раздел администратора"]
+        },
+
+        generic: {
+          referral_center: { title: "👥 Реферальный центр", text: "Приглашайте друзей и получайте бонусы.", items: ["Реферальная ссылка", "Количество приглашений", "Статус награды", "Бонусные задания"] },
+          apk_obb_menu: { title: "📦 Меню APK + OBB", text: "Файлы APK и OBB для установки.", items: ["APK файлы", "OBB пакеты", "Инструкция", "Заметки версии"] },
+          mini_games: { title: "🎯 Мини-игры", text: "Раздел мини-игр для бонусов.", items: ["Lucky Box", "Daily Spin", "Собрать очки", "Таблица лидеров"] },
+          settings: { title: "⚙️ Настройки", text: "Управление языком, профилем и настройками.", items: ["Язык", "Профиль", "Уведомления", "Тема"] },
+          admin_panel: { title: "🛠️ Админ-панель", text: "Раздел управления только для администраторов.", items: ["Объявления", "Пользователи", "Файлы", "Статистика"] }
         }
       },
 
@@ -803,63 +995,59 @@
         code: "UZ",
         brandSub: "Mini App Panel",
         badge: "Faol Tizim",
-        heroTitle: "PUBG Mobile Bepul Fayl Markazi",
-        heroText: "Kengaytirilgan Mini App paneliga xush kelibsiz.\nConfig, VPN, APK + OBB, referal va o‘yin menyulariga shu yerdan kiring.",
+        heroTitle: "PUBG Mobile\nFayl Markazi",
+        heroText: "Config, VPN, APK + OBB, referal va o‘yin menyulariga shu yerdan kiring.",
         statOne: "Faol",
         statTwo: "Til",
-        statThree: "Panel",
+        statThree: "Versiya",
         menuTitle: "Asosiy Menyu",
         menuSub: "Tanlang",
         footer: "Davom etish uchun menyudan tanlang.",
+        backHome: "← Asosiy Menyu",
         back: "← Orqaga",
         send: "Botga Yuborish",
 
-        menus: {
-          cheat_menu: {
-            icon: "🎮",
-            title: "Cheat Menyusi",
-            desc: "Config, VPN va maxsus fayl kategoriyalariga shu yerdan kiring.",
-            items: ["Global Config", "Koreya Config", "VPN Fayllari", "Yangi Paketlar"]
-          },
-          referral_center: {
-            icon: "👥",
-            title: "Referal Markazi",
-            desc: "Do‘stlaringizni taklif qilib bonus oling.",
-            items: ["Referal Havola", "Takliflar Soni", "Mukofot Holati", "Bonus Vazifalar"]
-          },
-          apk_obb_menu: {
-            icon: "📦",
-            title: "APK + OBB Menyusi",
-            desc: "O‘rnatish uchun APK va OBB paketlari shu yerda.",
-            items: ["APK Fayllari", "OBB Paketlari", "Qo‘llanma", "Versiya Eslatmalari"]
-          },
-          mini_games: {
-            icon: "🎯",
-            title: "Mini O‘yinlar",
-            desc: "Bonus olish uchun mini o‘yinlar bo‘limi.",
-            items: ["Omad Qutisi", "Kunlik Spin", "Ball To‘plash", "Liderlar Jadvali"]
-          },
-          settings: {
-            icon: "⚙️",
-            title: "Sozlamalar",
-            desc: "Til, profil va ilova sozlamalarini boshqaring.",
-            items: ["Til", "Profil", "Bildirishnomalar", "Tema"]
-          },
-          admin_panel: {
-            icon: "🛠️",
-            title: "Admin Paneli",
-            desc: "Faqat vakolatli foydalanuvchilar uchun.",
-            items: ["E’lonlar", "Foydalanuvchilar", "Fayllar", "Statistika"]
-          }
-        },
+        packageTitle: "📂 PUBG Mobile 4.4 Paketlari",
+        packFreeTitle: "Cheat / Config",
+        packFreeDesc: "Joriy o‘yin versiyasiga mos qo‘shilgan fayllar.",
+        packVpnTitle: "VPN Config",
+        packVpnDesc: "Config fayllari va tavsiya qilingan VPN ilovalari.",
+        packageChoose: "👇 Kerakli bo‘limni tanlang:",
+        btnOpenFree: "Bepul Cheat / Config",
+        btnOpenVpn: "VPN Config Menyusi",
+        btnBackMain: "Asosiy Menyuga Qaytish",
+
+        freePageTitle: "🆓 Bepul Cheat Paketlari • 4.4",
+        freeFolderTitle: "Qo‘shilgan Cheat / Config fayllari.",
+        freeFolderDesc: "Joriy versiyaga mos kategoriya fayllari.",
+        freeChoose: "🔽 Kategoriya tanlang:",
+        btnCheatSub: "Cheat Menyusi",
+        btnConfigSub: "Config Menyusi",
+        btnFreeBack: "Orqaga",
+
+        vpnPageTitle: "🛡️ Bepul VPN Config • 4.4",
+        vpnFolderTitle: "VPN / Config fayllari.",
+        vpnFolderDesc: "VPN config fayllari va tavsiya qilingan VPN ilovalari.",
+        vpnChoose: "🔽 Kategoriya tanlang:",
+        btnVpnSub: "VPN Config Menyusi",
+        btnVpnApps: "VPN Ilovasi",
+        btnVpnBack: "Orqaga",
 
         cards: {
-          cheat: ["Cheat Menyusi", "Config va fayl kategoriyalari"],
+          cheat: ["Cheat Menyusi", "PUBG Mobile 4.4 paketlari"],
           ref: ["Referal Markazi", "Taklif va mukofotlar"],
           apk: ["APK + OBB Menyusi", "O‘rnatish fayllari"],
           game: ["Mini O‘yinlar", "Bonus va ko‘ngilochar"],
           set: ["Sozlamalar", "Til, profil va sozlamalar"],
           admin: ["Admin Paneli", "Vakolatli foydalanuvchi maydoni"]
+        },
+
+        generic: {
+          referral_center: { title: "👥 Referal Markazi", text: "Do‘stlaringizni taklif qilib bonus oling.", items: ["Referal Havola", "Takliflar Soni", "Mukofot Holati", "Bonus Vazifalar"] },
+          apk_obb_menu: { title: "📦 APK + OBB Menyusi", text: "O‘rnatish uchun APK va OBB paketlari.", items: ["APK Fayllari", "OBB Paketlari", "Qo‘llanma", "Versiya Eslatmalari"] },
+          mini_games: { title: "🎯 Mini O‘yinlar", text: "Bonus olish uchun mini o‘yinlar bo‘limi.", items: ["Omad Qutisi", "Kunlik Spin", "Ball To‘plash", "Liderlar Jadvali"] },
+          settings: { title: "⚙️ Sozlamalar", text: "Til, profil va ilova sozlamalarini boshqaring.", items: ["Til", "Profil", "Bildirishnomalar", "Tema"] },
+          admin_panel: { title: "🛠️ Admin Paneli", text: "Faqat vakolatli foydalanuvchilar uchun.", items: ["E’lonlar", "Foydalanuvchilar", "Fayllar", "Statistika"] }
         }
       }
     };
@@ -869,6 +1057,18 @@
     function setText(id, value) {
       const el = document.getElementById(id);
       if (el) el.innerText = value;
+    }
+
+    function showPage(id) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function haptic() {
+      try {
+        if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+      } catch (e) {}
     }
 
     const displayName = tgUser
@@ -889,8 +1089,6 @@
     setText("menuTitle", t.menuTitle);
     setText("menuSub", t.menuSub);
     setText("footerText", t.footer);
-    setText("backBtn", t.back);
-    setText("sendBtn", t.send);
 
     setText("userName", displayName);
     setText("userId", "ID: " + displayId);
@@ -909,57 +1107,87 @@
     setText("mAdminTitle", t.cards.admin[0]);
     setText("mAdminDesc", t.cards.admin[1]);
 
-    function haptic() {
-      try {
-        if (tg.HapticFeedback) {
-          tg.HapticFeedback.impactOccurred("light");
-        }
-      } catch (e) {}
-    }
+    setText("backHomeOne", t.backHome);
+    setText("backHomeTwo", t.backHome);
+    setText("backPackageOne", t.back);
+    setText("backPackageTwo", t.back);
 
-    function openDetail(action) {
-      haptic();
-      selectedAction = action;
+    setText("packageTitle", t.packageTitle);
+    setText("packFreeTitle", t.packFreeTitle);
+    setText("packFreeDesc", t.packFreeDesc);
+    setText("packVpnTitle", t.packVpnTitle);
+    setText("packVpnDesc", t.packVpnDesc);
+    setText("packageChoose", t.packageChoose);
+    setText("btnOpenFree", t.btnOpenFree);
+    setText("btnOpenVpn", t.btnOpenVpn);
+    setText("btnBackMainOne", t.btnBackMain);
 
-      const menu = t.menus[action];
-      if (!menu) return;
+    setText("freePageTitle", t.freePageTitle);
+    setText("freeFolderTitle", t.freeFolderTitle);
+    setText("freeFolderDesc", t.freeFolderDesc);
+    setText("freeChoose", t.freeChoose);
+    setText("btnCheatSub", t.btnCheatSub);
+    setText("btnConfigSub", t.btnConfigSub);
+    setText("btnFreeBack", t.btnFreeBack);
 
-      setText("detailIcon", menu.icon);
-      setText("detailTitle", menu.title);
-      setText("detailText", menu.desc);
+    setText("vpnPageTitle", t.vpnPageTitle);
+    setText("vpnFolderTitle", t.vpnFolderTitle);
+    setText("vpnFolderDesc", t.vpnFolderDesc);
+    setText("vpnChoose", t.vpnChoose);
+    setText("btnVpnSub", t.btnVpnSub);
+    setText("btnVpnApps", t.btnVpnApps);
+    setText("btnVpnBack", t.btnVpnBack);
 
-      const list = document.getElementById("detailList");
-      list.innerHTML = "";
-
-      menu.items.forEach((item) => {
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerText = "✦ " + item;
-        list.appendChild(div);
-      });
-
-      document.getElementById("homePage").classList.remove("active");
-      document.getElementById("detailPage").classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    setText("genericSendBtn", t.send);
 
     function goHome() {
       haptic();
-      document.getElementById("detailPage").classList.remove("active");
-      document.getElementById("homePage").classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      showPage("homePage");
     }
 
-    function sendSelectedAction() {
+    function openPackagePage() {
+      haptic();
+      showPage("packagePage");
+    }
+
+    function openFreePage() {
+      haptic();
+      showPage("freePage");
+    }
+
+    function openVpnPage() {
+      haptic();
+      showPage("vpnPage");
+    }
+
+    function openGeneric(action) {
+      haptic();
+      currentGenericAction = action;
+
+      const item = t.generic[action];
+      if (!item) return;
+
+      setText("genericTitle", item.title);
+      setText("genericText", item.text);
+
+      const list = document.getElementById("genericList");
+      list.innerHTML = "";
+
+      item.items.forEach(x => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerText = "✦ " + x;
+        list.appendChild(div);
+      });
+
+      showPage("genericPage");
+    }
+
+    function sendAction(action) {
       haptic();
 
-      if (!selectedAction) return;
-
-      const menu = t.menus[selectedAction];
-
       const data = {
-        action: selectedAction,
-        title: menu ? menu.title : selectedAction,
+        action: action,
         lang: lang,
         user_id: displayId,
         username: tgUser && tgUser.username ? tgUser.username : "",
@@ -968,6 +1196,11 @@
       };
 
       tg.sendData(JSON.stringify(data));
+    }
+
+    function sendGenericAction() {
+      if (!currentGenericAction) return;
+      sendAction(currentGenericAction);
     }
   </script>
 </body>
