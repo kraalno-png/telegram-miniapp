@@ -483,6 +483,59 @@
       font-weight: 700;
     }
 
+
+    .admin-metrics {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+      margin-bottom: 4px;
+    }
+
+    .admin-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: #e7edfb;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .admin-row span:first-child {
+      color: #ffffff;
+      font-weight: 950;
+    }
+
+    .admin-row span:last-child {
+      color: var(--muted);
+      text-align: right;
+      font-weight: 850;
+    }
+
+    .admin-owner {
+      color: #bff8d5 !important;
+    }
+
+    .locked-box {
+      position: relative;
+      z-index: 2;
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 77, 109, 0.10);
+      border: 1px solid rgba(255, 77, 109, 0.22);
+      color: #ffd4dc;
+      font-size: 14px;
+      font-weight: 850;
+      line-height: 1.55;
+      margin-top: 14px;
+    }
+
     @media (min-width: 480px) {
       .menu-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -618,7 +671,7 @@
           <div class="arrow">›</div>
         </div>
 
-        <div class="menu-card" onclick="openGeneric('admin_panel')">
+        <div class="menu-card" onclick="openAdminPanel()">
           <div class="menu-icon">🛠️</div>
           <div class="menu-content">
             <div class="menu-title" id="mAdminTitle">Admin Paneli</div>
@@ -797,6 +850,105 @@
       </div>
     </div>
 
+
+    <!-- ADMIN MERKEZİ -->
+    <div id="adminPage" class="page">
+      <button class="back-mini" onclick="goHome()" id="adminBackHome">← Ana Menü</button>
+
+      <div class="package-card">
+        <div class="title" id="adminTitle">🛠️ Admin Merkezi</div>
+        <div class="divider"></div>
+
+        <div class="text" id="adminIntro">Yönetim paneline hoş geldin. Sistem durumunu ve yönetim bölümlerini buradan kontrol edebilirsin.</div>
+
+        <div class="admin-metrics">
+          <div class="admin-row">
+            <span id="adminLabelOwner">👑 Admin</span>
+            <span class="admin-owner" id="adminValueOwner">Aktif</span>
+          </div>
+          <div class="admin-row">
+            <span id="adminLabelUsers">👥 Kullanıcı</span>
+            <span id="adminValueUsers">9655</span>
+          </div>
+          <div class="admin-row">
+            <span id="adminLabelGames">🎮 Toplam oyun</span>
+            <span id="adminValueGames">4926</span>
+          </div>
+          <div class="admin-row">
+            <span id="adminLabelFiles">📂 Kayıtlı dosya</span>
+            <span id="adminValueFiles">35</span>
+          </div>
+          <div class="admin-row">
+            <span id="adminLabelSystem">🟢 Sistem</span>
+            <span id="adminValueSystem">Sorunsuz</span>
+          </div>
+        </div>
+
+        <div class="choose-text" id="adminChoose">👇 Yönetmek istediğin bölümü seç:</div>
+      </div>
+
+      <div class="big-actions">
+        <button class="action-btn primary" onclick="sendAdminAction('admin_file_management')">
+          <span>📂</span>
+          <span id="adminBtnFiles">Dosya Yönetimi</span>
+        </button>
+
+        <button class="action-btn" onclick="sendAdminAction('admin_user_management')">
+          <span>👥</span>
+          <span id="adminBtnUsers">Kullanıcı Yönetimi</span>
+        </button>
+
+        <button class="action-btn orange" onclick="sendAdminAction('admin_announcements')">
+          <span>📢</span>
+          <span id="adminBtnAnnounce">Duyuru Merkezi</span>
+        </button>
+
+        <button class="action-btn green" onclick="sendAdminAction('admin_points_games')">
+          <span>🎮</span>
+          <span id="adminBtnPoints">Puan / Oyun Yönetimi</span>
+        </button>
+
+        <button class="action-btn" onclick="sendAdminAction('admin_bot_stats')">
+          <span>📊</span>
+          <span id="adminBtnStats">Bot İstatistikleri</span>
+        </button>
+
+        <button class="action-btn" onclick="sendAdminAction('admin_system_settings')">
+          <span>⚙️</span>
+          <span id="adminBtnSettings">Sistem Ayarları</span>
+        </button>
+
+        <button class="action-btn back" onclick="goHome()">
+          <span>⬅️</span>
+          <span id="adminBtnBack">Ana Menüye Dön</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ADMIN KİLİTLİ -->
+    <div id="adminDeniedPage" class="page">
+      <button class="back-mini" onclick="goHome()" id="adminDeniedBack">← Ana Menü</button>
+
+      <div class="package-card">
+        <div class="title" id="adminDeniedTitle">⛔ Yetkisiz Erişim</div>
+        <div class="divider"></div>
+
+        <div class="locked-box" id="adminDeniedText">
+          Bu alan sadece bot sahibi için açılır. Admin ID eşleşmedi.
+        </div>
+
+        <div class="choose-text" id="adminDeniedId">Mevcut ID: -</div>
+      </div>
+
+      <div class="big-actions">
+        <button class="action-btn back" onclick="goHome()">
+          <span>⬅️</span>
+          <span id="adminDeniedBtn">Ana Menüye Dön</span>
+        </button>
+      </div>
+    </div>
+
+
     <!-- DİĞER SAYFALAR -->
     <div id="genericPage" class="page">
       <button class="back-mini" onclick="goHome()" id="backHomeTwo">← Ana Menü</button>
@@ -841,8 +993,105 @@
     const lang = params.get("lang") || "tr";
     const urlUserId = params.get("user_id") || "-";
     const tgUser = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+    const ADMIN_IDS = ["8062787886"];
 
     let currentGenericAction = "";
+
+
+    const ADMIN_TEXTS = {
+      tr: {
+        backHome: "← Ana Menü",
+        title: "🛠️ Admin Merkezi",
+        intro: "Yönetim paneline hoş geldin. Sistem durumunu ve yönetim bölümlerini buradan kontrol edebilirsin.",
+        ownerLabel: "👑 Admin",
+        ownerValue: "Aktif",
+        usersLabel: "👥 Kullanıcı",
+        gamesLabel: "🎮 Toplam oyun",
+        filesLabel: "📂 Kayıtlı dosya",
+        systemLabel: "🟢 Sistem",
+        systemValue: "Sorunsuz",
+        choose: "👇 Yönetmek istediğin bölümü seç:",
+        files: "Dosya Yönetimi",
+        users: "Kullanıcı Yönetimi",
+        announce: "Duyuru Merkezi",
+        points: "Puan / Oyun Yönetimi",
+        stats: "Bot İstatistikleri",
+        settings: "Sistem Ayarları",
+        backBtn: "Ana Menüye Dön",
+        deniedTitle: "⛔ Yetkisiz Erişim",
+        deniedText: "Bu alan sadece bot sahibi için açılır. Admin ID eşleşmedi.",
+        currentId: "Mevcut ID:"
+      },
+      en: {
+        backHome: "← Main Menu",
+        title: "🛠️ Admin Center",
+        intro: "Welcome to the management panel. You can control system status and management sections here.",
+        ownerLabel: "👑 Admin",
+        ownerValue: "Active",
+        usersLabel: "👥 Users",
+        gamesLabel: "🎮 Total games",
+        filesLabel: "📂 Registered files",
+        systemLabel: "🟢 System",
+        systemValue: "Stable",
+        choose: "👇 Choose the section you want to manage:",
+        files: "File Management",
+        users: "User Management",
+        announce: "Announcement Center",
+        points: "Points / Game Management",
+        stats: "Bot Statistics",
+        settings: "System Settings",
+        backBtn: "Back to Main Menu",
+        deniedTitle: "⛔ Unauthorized Access",
+        deniedText: "This area is only available for the bot owner. Admin ID did not match.",
+        currentId: "Current ID:"
+      },
+      ru: {
+        backHome: "← Главное меню",
+        title: "🛠️ Админ-центр",
+        intro: "Добро пожаловать в панель управления. Здесь можно контролировать статус системы и разделы управления.",
+        ownerLabel: "👑 Админ",
+        ownerValue: "Активен",
+        usersLabel: "👥 Пользователи",
+        gamesLabel: "🎮 Всего игр",
+        filesLabel: "📂 Файлы",
+        systemLabel: "🟢 Система",
+        systemValue: "Стабильно",
+        choose: "👇 Выберите раздел для управления:",
+        files: "Управление файлами",
+        users: "Управление пользователями",
+        announce: "Центр объявлений",
+        points: "Управление очками / играми",
+        stats: "Статистика бота",
+        settings: "Настройки системы",
+        backBtn: "Вернуться в меню",
+        deniedTitle: "⛔ Нет доступа",
+        deniedText: "Этот раздел доступен только владельцу бота. Admin ID не совпал.",
+        currentId: "Текущий ID:"
+      },
+      uz: {
+        backHome: "← Asosiy Menyu",
+        title: "🛠️ Admin Markazi",
+        intro: "Boshqaruv paneliga xush kelibsiz. Tizim holati va boshqaruv bo‘limlarini shu yerdan nazorat qilishingiz mumkin.",
+        ownerLabel: "👑 Admin",
+        ownerValue: "Faol",
+        usersLabel: "👥 Foydalanuvchi",
+        gamesLabel: "🎮 Jami o‘yin",
+        filesLabel: "📂 Saqlangan fayl",
+        systemLabel: "🟢 Tizim",
+        systemValue: "Barqaror",
+        choose: "👇 Boshqarmoqchi bo‘lgan bo‘limni tanlang:",
+        files: "Fayl Boshqaruvi",
+        users: "Foydalanuvchi Boshqaruvi",
+        announce: "E’lon Markazi",
+        points: "Ball / O‘yin Boshqaruvi",
+        stats: "Bot Statistikasi",
+        settings: "Tizim Sozlamalari",
+        backBtn: "Asosiy Menyuga Qaytish",
+        deniedTitle: "⛔ Ruxsat Yo‘q",
+        deniedText: "Bu bo‘lim faqat bot egasi uchun. Admin ID mos kelmadi.",
+        currentId: "Joriy ID:"
+      }
+    };
 
     const TEXTS = {
       tr: {
@@ -1225,6 +1474,32 @@
 
     setText("genericSendBtn", t.send);
 
+    const at = ADMIN_TEXTS[lang] || ADMIN_TEXTS.tr;
+
+    setText("adminBackHome", at.backHome);
+    setText("adminDeniedBack", at.backHome);
+    setText("adminTitle", at.title);
+    setText("adminIntro", at.intro);
+    setText("adminLabelOwner", at.ownerLabel);
+    setText("adminValueOwner", at.ownerValue);
+    setText("adminLabelUsers", at.usersLabel);
+    setText("adminLabelGames", at.gamesLabel);
+    setText("adminLabelFiles", at.filesLabel);
+    setText("adminLabelSystem", at.systemLabel);
+    setText("adminValueSystem", at.systemValue);
+    setText("adminChoose", at.choose);
+    setText("adminBtnFiles", at.files);
+    setText("adminBtnUsers", at.users);
+    setText("adminBtnAnnounce", at.announce);
+    setText("adminBtnPoints", at.points);
+    setText("adminBtnStats", at.stats);
+    setText("adminBtnSettings", at.settings);
+    setText("adminBtnBack", at.backBtn);
+    setText("adminDeniedBtn", at.backBtn);
+    setText("adminDeniedTitle", at.deniedTitle);
+    setText("adminDeniedText", at.deniedText);
+
+
     function goHome() {
       haptic();
       showPage("homePage");
@@ -1248,6 +1523,45 @@
     function openVpnPage() {
       haptic();
       showPage("vpnPage");
+    }
+
+
+    function isAdminUser() {
+      return ADMIN_IDS.includes(String(displayId));
+    }
+
+    function openAdminPanel() {
+      haptic();
+
+      if (isAdminUser()) {
+        showPage("adminPage");
+      } else {
+        const at = ADMIN_TEXTS[lang] || ADMIN_TEXTS.tr;
+        setText("adminDeniedId", at.currentId + " " + displayId);
+        showPage("adminDeniedPage");
+      }
+    }
+
+    function sendAdminAction(action) {
+      haptic();
+
+      if (!isAdminUser()) {
+        openAdminPanel();
+        return;
+      }
+
+      const data = {
+        action: action,
+        area: "admin_panel",
+        admin_id: displayId,
+        lang: lang,
+        user_id: displayId,
+        username: tgUser && tgUser.username ? tgUser.username : "",
+        first_name: tgUser && tgUser.first_name ? tgUser.first_name : "",
+        time: new Date().toISOString()
+      };
+
+      tg.sendData(JSON.stringify(data));
     }
 
     function openGeneric(action) {
