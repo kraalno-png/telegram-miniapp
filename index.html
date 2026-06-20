@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telegram Mini App</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #0b0f19;
+      color: #ffffff;
+    }
+
+    .app {
+      padding: 18px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #151b2e, #20283d);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #b9c2d6;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: #151b2e;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #248bff, #8f37ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .user-name {
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .user-id {
+      margin-top: 4px;
+      color: #9ca8c3;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .menu-btn {
+      border: none;
+      border-radius: 18px;
+      background: #222a40;
+      color: white;
+      padding: 18px 8px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .menu-btn:active {
+      transform: scale(0.97);
+      opacity: 0.85;
+    }
+
+    .primary {
+      width: 100%;
+      border: none;
+      border-radius: 17px;
+      background: #248bff;
+      color: white;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: 800;
+      margin-top: 14px;
+      cursor: pointer;
+    }
+
+    .primary:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .info {
+      font-size: 13px;
+      color: #8d98b3;
+      margin-top: 12px;
+      line-height: 1.5;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <div class="header">
+      <div class="title" id="title">🚀 Mini App</div>
+      <div class="subtitle" id="subtitle">Yükleniyor...</div>
+    </div>
+
+    <div class="card">
+      <div class="user-box">
+        <div class="avatar" id="avatar">U</div>
+        <div>
+          <div class="user-name" id="userName">User</div>
+          <div class="user-id" id="userId">ID: -</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="grid">
+        <button class="menu-btn" id="profileBtn">👤 Profil</button>
+        <button class="menu-btn" id="tasksBtn">🎁 Görevler</button>
+        <button class="menu-btn" id="balanceBtn">💰 Bakiye</button>
+        <button class="menu-btn" id="settingsBtn">⚙️ Ayarlar</button>
+      </div>
+
+      <button class="primary" onclick="sendTestData()" id="sendBtn">
+        Bot'a Veri Gönder
+      </button>
+
+      <div class="info" id="infoText">
+        Bu ilk Mini App test ekranıdır.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    const params = new URLSearchParams(window.location.search);
+    const lang = params.get("lang") || "tr";
+    const userIdFromUrl = params.get("user_id") || "-";
+
+    const TEXTS = {
+      tr: {
+        title: "🚀 Mini App",
+        subtitle: "Hoş geldin. Arayüz Türkçe olarak açıldı.",
+        profile: "👤 Profil",
+        tasks: "🎁 Görevler",
+        balance: "💰 Bakiye",
+        settings: "⚙️ Ayarlar",
+        send: "Bot'a Veri Gönder",
+        info: "Bu ilk Mini App test ekranıdır."
+      },
+      en: {
+        title: "🚀 Mini App",
+        subtitle: "Welcome. The interface is opened in English.",
+        profile: "👤 Profile",
+        tasks: "🎁 Tasks",
+        balance: "💰 Balance",
+        settings: "⚙️ Settings",
+        send: "Send Data to Bot",
+        info: "This is the first Mini App test screen."
+      },
+      ru: {
+        title: "🚀 Mini App",
+        subtitle: "Добро пожаловать. Интерфейс открыт на русском.",
+        profile: "👤 Профиль",
+        tasks: "🎁 Задания",
+        balance: "💰 Баланс",
+        settings: "⚙️ Настройки",
+        send: "Отправить данные боту",
+        info: "Это первый тестовый экран Mini App."
+      },
+      uz: {
+        title: "🚀 Mini App",
+        subtitle: "Xush kelibsiz. Interfeys o'zbek tilida ochildi.",
+        profile: "👤 Profil",
+        tasks: "🎁 Vazifalar",
+        balance: "💰 Balans",
+        settings: "⚙️ Sozlamalar",
+        send: "Botga ma'lumot yuborish",
+        info: "Bu birinchi Mini App test oynasi."
+      }
+    };
+
+    const t = TEXTS[lang] || TEXTS.tr;
+
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("subtitle").innerText = t.subtitle;
+    document.getElementById("profileBtn").innerText = t.profile;
+    document.getElementById("tasksBtn").innerText = t.tasks;
+    document.getElementById("balanceBtn").innerText = t.balance;
+    document.getElementById("settingsBtn").innerText = t.settings;
+    document.getElementById("sendBtn").innerText = t.send;
+    document.getElementById("infoText").innerText = t.info;
+
+    const tgUser = tg.initDataUnsafe && tg.initDataUnsafe.user;
+
+    if (tgUser) {
+      const fullName = `${tgUser.first_name || ""} ${tgUser.last_name || ""}`.trim();
+      document.getElementById("userName").innerText = fullName || "User";
+      document.getElementById("userId").innerText = "ID: " + tgUser.id;
+      document.getElementById("avatar").innerText = (tgUser.first_name || "U")[0];
+    } else {
+      document.getElementById("userName").innerText = "User";
+      document.getElementById("userId").innerText = "ID: " + userIdFromUrl;
+      document.getElementById("avatar").innerText = "U";
+    }
+
+    function sendTestData() {
+      const data = {
+        action: "mini_app_test",
+        lang: lang,
+        user_id: tgUser ? tgUser.id : userIdFromUrl,
+        time: new Date().toISOString()
+      };
+
+      tg.sendData(JSON.stringify(data));
+      tg.close();
+    }
+  </script>
+</body>
+          </html>
